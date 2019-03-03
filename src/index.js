@@ -1,9 +1,25 @@
+require('dotenv').config();
+
 const express = require('express');
-const app = express();
+const morgan =  require('morgan');
+const mongoose = require('mongoose');
+const path = require('path');
 const PORT = 3000;
 
-app.get('/', (req, res) => {
-  return res.send('habemos um server');
-})
+const app = express();
 
-app.listen(PORT, () => console.log(`Server running in port ${PORT}`))
+// Database config
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+
+// Access the files in the local db () ../temp/uploads
+app.use('/files', express.static(path.resolve(__dirname, '..', 'temp', 'uploads'),));
+
+app.use(require('./routes'));
+
+app.listen(PORT, () => console.log(`Server running in port ${PORT}`));
