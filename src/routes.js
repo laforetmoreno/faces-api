@@ -2,13 +2,21 @@ const routes = require('express').Router();
 const multer = require('multer');
 const multerConfig = require('./config/multer');
 
-const postsControllers = require('./controllers/posts');
+const imagesController = require('./controllers/images');
+const userControllers = require('./controllers/users');
 
-routes.post('/posts', multer(multerConfig)
-  .single('file'), postsControllers.create)
+// Images
+routes.post('/images', multer(multerConfig)
+  .single('file'), imagesController.create)
 
-routes.get('/posts', postsControllers.retrieveAll);
+routes.get('/images', imagesController.retrieveAll);
 
-routes.delete('/posts/:id', postsControllers.deleteById)
+routes.delete('/images/:id', imagesController.deleteImage)
+
+// Users
+routes.post('/users', userControllers.create);
+routes.get('/users', userControllers.retrieveAll);
+routes.get('/users/:id', userControllers.retrieveById);
+routes.delete('/users/:id', userControllers.deleteUser);
 
 module.exports = routes;

@@ -1,4 +1,4 @@
-const Post = require('../models/Post');
+const Images = require('../models/Images');
 
 const create = async (req, res) => {
   const { 
@@ -7,33 +7,34 @@ const create = async (req, res) => {
     key,
     location: url = ''
   } = req.file;
-
+  
   try {
-    const post = await Post.create({
+    const image = await Images.create({
       name,
       size,
       key,
       url,
     });
   
-    return res.json(post);
+    return res.json(image);
   } catch (error) {
-    return res.status(400).json(error.message);
+    return res.json(error, 'We could not publish the image.');
   }
 }
 
 const retrieveAll = async (req, res) => {
-  const list = await Post.find();
+  const images = await Images.find();
 
   try {
-    return res.json(list);
+    return res.json(images);
+    // return images;
   } catch (error) {
     return res.status(404).json(error.message)
   }
 }
 
-const deleteById = async (req, res) => {
-  const image = await Post.findById(req.params.id);
+const deleteImage = async (req, res) => {
+  const image = await Images.findById(req.params.id);
 
   try {
     await image.remove();
@@ -44,4 +45,4 @@ const deleteById = async (req, res) => {
   }
 }
 
-module.exports = { create, retrieveAll, deleteById };
+module.exports = { create, retrieveAll, deleteImage };
